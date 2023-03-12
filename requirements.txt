@@ -1,0 +1,4 @@
+# movefiles_byvoice
+opencv-python
+SpeechRecognition
+pyaudio 
