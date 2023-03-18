@@ -48,7 +48,7 @@ def main(folder_path):
             # Take text input
             folder_name = str(chr(key))
 
-            print(f"{file_name} : {folder_name}")
+            print(f'"{file_name}" : "{folder_name}"')
             # Rename/move the image to the folder with the given name
             new_folder_path = os.path.join(folder_path, folder_name)
 
