@@ -30,6 +30,8 @@ def main(folder_path):
     files = os.listdir(folder_path)
     files = [f for f in files if f.endswith('.jpg') or f.endswith('.png') or f.endswith('.jpeg')]
 
+    last_file = {"filepath":"",
+                 "folder_name": ""}
     # Iterate over all the files in the folder
     for ind, file_name in enumerate(files):
         # Read the image
@@ -40,9 +42,35 @@ def main(folder_path):
         window_name = file_name
         cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
         cv2.resizeWindow(window_name, 700, 700)
-        cv2.imshow(file_name, img)
+        cv2.imshow(window_name, img)
         key = cv2.waitKey()
         
+
+        if str(chr(key)) == "z":
+            # Show the image
+            undo_image = cv2.imread(last_file["filepath"])
+            window_name = "Undo window"
+            cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+            cv2.resizeWindow(window_name, 700, 700)
+            cv2.imshow(window_name, undo_image)
+            key = cv2.waitKey()
+            # try:
+            # Take text input
+            folder_name = str(chr(key))
+            undo_filename = last_file["filepath"].replace(last_file["folder_name"], folder_name)
+
+            print(f'Undo :: "{undo_filename}" : "{folder_name}"')
+
+            os.makedirs(os.path.dirname(undo_filename), exist_ok=True)
+            os.rename(last_file["filepath"], undo_filename)
+            cv2.destroyWindow(window_name)
+
+            # Show the image
+            window_name = file_name
+            cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+            cv2.resizeWindow(window_name, 700, 700)
+            cv2.imshow(file_name, img)
+            key = cv2.waitKey()
 
         try:
             # Take text input
@@ -57,11 +85,14 @@ def main(folder_path):
             new_img_path = os.path.join(new_folder_path, file_name)
             os.rename(img_path, new_img_path)
 
+            last_file["filepath"] = new_img_path
+            last_file["folder_name"] = folder_name
+
         except Exception as e: print(e)
 
         cv2.destroyAllWindows()
 
 
 if __name__ == "__main__":
-    folder_path = "/home/gourav/Downloads/disha_nonShelf_testImages"
+    folder_path = "/home/gourav/Downloads/disha_tray_parts_task1"
     main(folder_path)
